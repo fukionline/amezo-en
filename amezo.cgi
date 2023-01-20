@@ -9,9 +9,9 @@ $copyright = <<EOL;
 -->
 EOL
 
-$amezo = '—‚ ‚ß‚¼‚¤(‰¼)';
-$urlbase = 'http://www17.big.or.jp/~amezo_/';
-$admin = 'ƒTƒ|[ƒg';
+$amezo = 'ï¼ Amezo(ä»®)';
+$urlbase = '../';
+$admin = 'Support';
 
 $ENV{'SCRIPT_FILENAME'} =~ /\/([^\/]+)$/;
 $cgi = $1;
@@ -24,10 +24,10 @@ if($ENV{'REQUEST_METHOD'} eq 'GET'){
 }
 
 read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
-length($buffer) > 5000 && &error('“Še“à—e‚ª‘å‚«‚·‚¬‚Ü‚·');
+length($buffer) > 5000 && &error('The post is too big!');
 $referer = $ENV{'HTTP_REFERER'};
 $referer =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
-$referer =~ /^$urlbase([\w\.\-]+)/ || &error('ƒGƒ‰[');
+$referer =~ /^$urlbase([\w\.\-]+)/ || &error('ã‚¨ãƒ©ãƒ¼');
 $folder = $1;
 
 @pairs = split(/&/,$buffer);
@@ -59,23 +59,23 @@ $next += 20;
 $reload = 1 if $name eq $subj && $name eq $comm;
 $reload = 1 unless $name || $subj || $comm;
 @a = ($comm =~ /<br>/g);
-(@a + 0 > 20 || $comm =~ /PP/) && &error("ƒRƒƒ“ƒg‚ª’·‚·‚¬‚Ü‚·");
-$name =~ s/ |@//g;
+(@a + 0 > 20 || $comm =~ /ï¿£ï¿£/) && &error("Your comment is too long.");
+$name =~ s/ |ã€€//g;
 $x = $subj.$name.$comm;
-$x =~ /R/ && $x =~ /–{/ && ($subj =~ s/R//g, $name =~ s/R//g, $comm =~ s/R//g);
-$x =~ /—²/ && $x =~ /—Y/ && ($subj =~ s/—²//g, $name =~ s/—²//g, $comm =~ s/—²//g);
+$x =~ /å±±/ && $x =~ /æœ¬/ && ($subj =~ s/å±±//g, $name =~ s/å±±//g, $comm =~ s/å±±//g);
+$x =~ /éš†/ && $x =~ /é›„/ && ($subj =~ s/éš†//g, $name =~ s/éš†//g, $comm =~ s/éš†//g);
 
 if($next == 21 && !$reload){
 
 $_ = $admin;
 s/(\W)/\\$1/g;
-$name =~ s/$_/”$admin/g;
+$name =~ s/$_/ï¼ƒ$admin/g;
 
 crypt($name, 'am') eq 'amsqKfBaSfYYU' && &del;
 $res && undef $subj;
-$name || &error('“ŠeÒ‚ğ‹L“ü‚µ‚Ä‚­‚¾‚³‚¢.');
-$comm || &error("ƒRƒƒ“ƒg‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
-$res || $subj || &error("‘è–¼‚ª“ü—Í‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+$name || &error('Please fill in the name.');
+$comm || &error("No contents have been entered.");
+$res || $subj || &error("Title has not been entered");
 
 $comm =~ s/(http\:[\w\.\~\-\/\?\+\=\:\@\%\;\#]+)/<a href=$1 target=_blank>$1<\/a>/g;
 $mail && ($name = "<a href=\"mailto\:$mail\">$name </a>");
@@ -88,12 +88,12 @@ $mday < 10 && ($mday = "0$mday");
 $sec < 10 && ($sec = "0$sec");
 $min < 10 && ($min = "0$min");
 $hour < 10 && ($hour = "0$hour");
-$wday = ("“ú", "Œ", "‰Î", "…", "–Ø", "‹à", "“y")[$wday];
-$date = "$monthŒ$mday“ú($wday)$hour$min•ª$sec•b";
+$wday = ("Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat")[$wday];
+$date = "$month/$mday ($wday) at $hour:$min:$sec";
 $res = "$year$month$mday$hour$min$sec" unless $res;
 
 $file = "./$folder/$res.html";
-open(W, "+< $file") || $subj && open(W, "> $file") || &error('ƒXƒŒƒbƒh‚ª‚ ‚è‚Ü‚¹‚ñ.');
+open(W, "+< $file") || $subj && open(W, "> $file") || &error('There are no threads.');
 flock(W, 2);
 while(<W>){
 	last unless /<dt>(\d+)/;
@@ -105,23 +105,23 @@ seek(W, $pos, 0);
 $cnt++;
 
 $prev =~ /<b>(.+) <\/b>.+<dd>(.+) <\/dl>/;
-$name eq $1 && $comm eq $2 && print W && &error('“ñdƒJƒLƒR‚Å‚·.');
+$name eq $1 && $comm eq $2 && print W && &error('Double entry.');
 if($subj){
 	$subj1 = "<title>$subj </title>";
 	$subj2 = "<font size=+2 color=red><b>$subj </b></font>";
 }
 $line = <<EOL;
-$subj1<dl><dt>$cnt$subj2“ŠeÒF<font color=forestgreen><b>$name </b></font>
-<font size=-1>@“Še“úF$date</font><br><dd>$comm </dl>
+$subj1<dl><dt>$cnt$subj2 Posterï¼š<font color=forestgreen><b>$name </b></font>
+<font size=-1>ã€€Postedï¼š$date</font><br><dd>$comm </dl>
 EOL
 $line =~ s/\n//g;
 print W "$line\n";
 $line = <<EOL;
 <form method=post action="../$cgi">
 <input type=hidden name="res" value="$res">
-“ŠeÒ <input type=text name="name" size=20>
-ƒ[ƒ‹ <input type=text name="mail" size=20><br>
-<input type=submit value="ª‚Ö‚ÌƒŒƒXƒJƒLƒR" ><br>
+Name <input type=text name="name" size=20>
+E-Mail <input type=text name="mail" size=20><br>
+<input type=submit value="â†‘ Response" ><br>
 <textarea name="comm" rows=4 cols=70 ></textarea>
 </form>
 EOL
@@ -143,7 +143,7 @@ close(R);
 $page = '2' if $next != 21;
 $index = "index$page.html";
 $file = "./$folder/$index";
-$main = "(ƒƒCƒ“)" if $folder eq 'main';
+$main = "(Main)" if $folder eq 'main';
 ($color, $bg) = split(/!/, $color);
 $bg = " background=\"$bg\"" if $bg;
 $text = q( text="#ffffff" link="firebrick" vlink="firebrick") if $color =~ "#0";
@@ -170,8 +170,8 @@ close(R);
 
 print W <<EOF;
 <form method=post action="../$cgi">
-<input type=submit value="Ÿ‚Ìƒy[ƒW">
-<input type=text name="next" value="$next" size="3">`</form>
+<input type=submit value="Next page">
+<input type=text name="next" value="$next" size="3">ï½</form>
 <font size=2>
 <!-- HEAD LINE -->
 EOF
@@ -225,17 +225,17 @@ EOL
 	$k = $j - 98;
 	$sub = <<EOL if $j > 200;
 <input type=text name="from" value="$k" size="4">
-<input type=submit name="sub" value="`">@
+<input type=submit name="sub" value="ï½">ã€€
 EOL
 	print W <<EOL;
 </font></td></tr></table>
 <form method=post action="../$cgi">
 <input type=hidden name="res" value="$res">
-“ŠeÒ <input type=text name="name" size=20>
-ƒ[ƒ‹ <input type=text name="mail" size=20><br>
-<input type=submit value="ª‚Ö‚ÌƒŒƒXƒJƒLƒR" >
-<a href="$res.html">ƒŒƒX‘S•”‚ğŒ©‚é</a>
-$sub<a href="#top">ã‚Ö@</a><a href="./">ƒŠƒ[ƒh</a><br>
+Name <input type=text name="name" size=20>
+E-mail <input type=text name="mail" size=20><br>
+<input type=submit value="â†‘ Response" >
+<a href="$res.html">See all responses</a>
+$sub<a href="#top">Up.ã€€</a><a href="./">Reset</a><br>
 <textarea name="comm" rows=4 cols=70 ></textarea>
 </form><hr>
 </td></tr></table>
@@ -245,8 +245,8 @@ EOL
 
 print W <<EOF;
 <form method=post action="../$cgi">
-<input type=submit value="Ÿ‚Ìƒy[ƒW">
-<input type=text name="next" value="$next" size="3">`</form>
+<input type=submit value="Next page">
+<input type=text name="next" value="$next" size="3">ï½</form>
 <hr></body></html>
 EOF
 
