@@ -9,7 +9,7 @@ $copyright = <<EOL;
 -->
 EOL
 
-$amezo = '＠Amezo(仮)';
+$amezo = '@Amezo (tenative)';
 $urlbase = '../';
 $admin = 'Support';
 
@@ -27,7 +27,7 @@ read(STDIN, $buffer, $ENV{'CONTENT_LENGTH'});
 length($buffer) > 5000 && &error('The post is too big!');
 $referer = $ENV{'HTTP_REFERER'};
 $referer =~ s/%([a-fA-F0-9][a-fA-F0-9])/pack("C", hex($1))/eg;
-$referer =~ /^$urlbase([\w\.\-]+)/ || &error('エラー');
+$referer =~ /^$urlbase([\w\.\-]+)/ || &error('Error.');
 $folder = $1;
 
 @pairs = split(/&/,$buffer);
@@ -316,3 +316,4 @@ sub del {
 	utime $ts+1, $ts+1, $file;
 	exit;
 }
+
